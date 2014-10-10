@@ -22,16 +22,19 @@ public class ParksDB extends SQLiteOpenHelper {
     /** Field 1 of the table parks, which is the primary key */
     public static final String FIELD_ROW_ID = "_id";
  
-    /** Field 2 of the table parks, stores the latitude */
+    /** Field 2 of the table parks, which is the primary key */
+    public static final String FIELD_REF = "ref";
+ 
+    /** Field 3 of the table parks, stores the latitude */
     public static final String FIELD_LAT = "lat";
  
-    /** Field 3 of the table parks, stores the longitude*/
+    /** Field 4 of the table parks, stores the longitude*/
     public static final String FIELD_LNG = "lng";
  
-    /** Field 4 of the table parks, stores the title of the park*/
+    /** Field 5 of the table parks, stores the title of the park*/
     public static final String FIELD_TITLE = "ttl";
     
-    /** Field 5 of the table parks, stores the snippet of the park*/
+    /** Field 6 of the table parks, stores the snippet of the park*/
     public static final String FIELD_SNIPPET = "snp";
     
     /** A constant, stores the the table name */
@@ -40,7 +43,7 @@ public class ParksDB extends SQLiteOpenHelper {
     /** An instance variable for SQLiteDatabase */
     //private SQLiteDatabase mDB;
     
-    private static final String[] COLUMNS = {FIELD_ROW_ID,FIELD_LAT,
+    private static final String[] COLUMNS = {FIELD_ROW_ID,FIELD_REF,FIELD_LAT,
     	FIELD_LNG,FIELD_TITLE,FIELD_SNIPPET};
     
     // Declare variables for input streams...
@@ -48,7 +51,7 @@ public class ParksDB extends SQLiteOpenHelper {
    	private BufferedReader br;
 
    	// The csv fields currently in use are:
-   	// _id, lat, lng, title, snp,
+   	// ref, lat, lng, title, snp,
    	private int numberOfFields = 5;
    	
    	//a context
@@ -73,6 +76,7 @@ public class ParksDB extends SQLiteOpenHelper {
      public void onCreate(SQLiteDatabase db) {
          String sql =     "create table " + DATABASE_TABLE + " ( " +
                           FIELD_ROW_ID + " integer primary key autoincrement, " +
+                          FIELD_REF + " integer , " +
                           FIELD_LAT + " double , " +
                           FIELD_LNG + " double , " +
                           FIELD_TITLE + " text , " +
@@ -91,6 +95,7 @@ public class ParksDB extends SQLiteOpenHelper {
     	 
     	 //1. create ContentValues to add key "column"/value
     	 ContentValues values = new ContentValues();
+    	 values.put(FIELD_REF, aPark.getRef()); //get OSM ref
     	 values.put(FIELD_LAT, aPark.getLat()); //get lat
     	 values.put(FIELD_LNG, aPark.getLng()); //get lng
     	 values.put(FIELD_TITLE, aPark.getTitle()); //get title
@@ -128,10 +133,11 @@ public class ParksDB extends SQLiteOpenHelper {
     	 //3. build park object
     	 Park aPark = new Park();
     	 aPark.setId(Integer.parseInt(cursor.getString(0)));
-    	 aPark.setLat(cursor.getDouble(1));
-    	 aPark.setLng(cursor.getDouble(2));
-    	 aPark.setTitle(cursor.getString(3));
-    	 aPark.setSnippet(cursor.getString(4));
+    	 aPark.setRef(cursor.getInt(1));
+    	 aPark.setLat(cursor.getDouble(2));
+    	 aPark.setLng(cursor.getDouble(3));
+    	 aPark.setTitle(cursor.getString(4));
+    	 aPark.setSnippet(cursor.getString(5));
     	 
     	 //log
     	 Log.d("getPark("+id+")", aPark.toString());
@@ -157,12 +163,13 @@ public class ParksDB extends SQLiteOpenHelper {
              do {
                  park = new Park();
                  park.setId(Integer.parseInt(cursor.getString(0)));
-                 park.setLat(cursor.getDouble(1));
-                 park.setLng(cursor.getDouble(2));
-                 park.setTitle(cursor.getString(3));
-                 park.setSnippet(cursor.getString(4));
+                 park.setRef(cursor.getInt(1));
+                 park.setLat(cursor.getDouble(2));
+                 park.setLng(cursor.getDouble(3));
+                 park.setTitle(cursor.getString(4));
+                 park.setSnippet(cursor.getString(5));
   
-                 // Add book to books
+                 // Add park to parks
                  parks.add(park);
              } while (cursor.moveToNext());
          }
@@ -219,6 +226,7 @@ public class ParksDB extends SQLiteOpenHelper {
 	         
 	         //1. create ContentValues to add key "column"/value
 	    	 ContentValues values = new ContentValues();
+	    	 values.put(FIELD_REF, fieldContents[0]); //get ref
 	    	 values.put(FIELD_LAT, fieldContents[1]); //get lat
 	    	 values.put(FIELD_LNG, fieldContents[2]); //get lng
 	    	 values.put(FIELD_TITLE, fieldContents[3]); //get title

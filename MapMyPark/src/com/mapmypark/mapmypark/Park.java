@@ -3,6 +3,7 @@ package com.mapmypark.mapmypark;
 public class Park {
 	
 	private int id;
+	private int ref;
 	private double lat;
 	private double lng;
     private String title;
@@ -10,8 +11,9 @@ public class Park {
  
     public Park(){}
  
-    public Park(double aLat, double aLng, String aTitle, String aSnippet) {
+    public Park(int aRef, double aLat, double aLng, String aTitle, String aSnippet) {
         super();
+        ref = aRef;
         lat = aLat;
         lng = aLng;
         title = aTitle;
@@ -26,6 +28,16 @@ public class Park {
     public int getID()
     {
     	return id;
+    }
+    
+    public void setRef(int aRef)
+    {
+    	ref = aRef;
+    }
+    
+    public int getRef()
+    {
+    	return ref;
     }
     
     public void setLat(double aLat)
@@ -70,7 +82,7 @@ public class Park {
  
     @Override
     public String toString() {
-        return "Park [id=" + id + ", lat=" + lat + ", lng=" + lng + "," +
+        return "Park [ref=" + ref + ", lat=" + lat + ", lng=" + lng + "," +
         		"title=" + title + ", snippet= " + snippet + "]";
     }
 
